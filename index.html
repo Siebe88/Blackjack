@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <link href="http://fonts.cdnfonts.com/css/casino" rel="stylesheet">
+    <title>Black Jack</title>
+    <link rel="icon" href="img/spades sign.png">
+</head>
+
+<body>
+    <!-- Source: https://www.codecademy.com/courses/learn-html/lessons/html-forms/exercises/form-review
+    I used the html layout of the Davie's burger website of the introduction course on html as a template -->
+    <section id="overlay">
+        <header>
+            <img id="bgLogo" src="img/Black Jack logo.png" alt="Black Jack" class="logo">
+            <!-- This is just something to "" -->
+            <iframe id="spotify" style="border-radius:12px" src="https://open.spotify.com/embed/playlist/37i9dQZF1DZ06evO0pwRmV?utm_source=generator&theme=0" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>
+        </header>
+        <hr>
+        <section class="playingcards">
+            <h2 id="ScoreHouse">The house: </h2>
+            <div id="houseCards">
+                <img src="img/closedCard1.png" />
+                <img src="img/closedCard1.png" />
+            </div>
+
+            <h2 id="ScorePlayer">The player:</h2>
+            <div id="playerCards">
+                <img src="img/closedCard1.png" />
+                <img src="img/closedCard1.png" />
+
+            </div>
+            <div class="buttons">
+                <button id="hit-button" class="disabled">Hit</button>
+                <button id="stand-button" class="disabled">Stand</button>
+                <button id="deal-button" class="enabled">Deal</button>
+            </div>
+        </section>
+        <footer>
+            <p id="winnerText"> </p>
+            <p id="gamesPlayer">You have won: 0</p>
+            <p id="gamesHouse">The house has won: 0</p>
+        </footer>
+    </section>
+    <!-- Imports the jquery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script src="blackjack.js"></script>
+    <script>
+        // Source: introduction to jQuery: https://www.khanacademy.org/computing/computer-programming/html-js-jquery/jquery-intro/pc/challenge-your-first-jquery
+        $(document).ready(function() {
+            $("#deal-button").click(function() {
+                dealCards();
+                getScoresPlayer();
+            });
+            $("#hit-button").click(function() {
+                getCard('playerCards');
+                getScoresPlayer();
+            });
+            $("#stand-button").click(function() {
+                stand();
+            });
+            // Cheat function
+            $("#bgLogo").click(function() {
+                if (houseCards.length > 0) {
+                    var $cardsHouse = $("#houseCards img")
+                    $cardsHouse.each(function(index, element) {
+                        let imageUrl = getCardImage(houseCards[$(this).index()]);
+                        $(this).attr("src", imageUrl);
+                    })
+                }
+
+                $("<img>")
+                    .attr("src", "img/closedCard1.png")
+                    .appendTo("#playerCards")
+                    .hide()
+                    .slideDown(1000);
+            })
+        });
+    </script>
+</body>
+
+</html>

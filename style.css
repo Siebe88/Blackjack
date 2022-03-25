@@ -1,0 +1,78 @@
+/* Source: https://www.codecademy.com/courses/learn-html/lessons/html-forms/exercises/form-review
+I used the html layout of the Davie's burger website of the introduction course on html as a template */
+
+* {
+    box-sizing: border-box;
+    /* border: 1px red !important; */
+}
+
+body {
+    background-color: rgb(77, 72, 72);
+    font-family: 'Casino Shadow', sans-serif;
+    text-align: center;
+    background-image: url("img/background.png");
+    background-repeat: repeat;
+    background-size: 150px;
+    overflow: hidden;
+}
+
+form {
+    text-align: center;
+    line-height: 30px;
+    height: 80%;
+    overflow: auto;
+}
+
+form hr {
+    width: 15%;
+}
+
+.buttons button {
+    color: white;
+    width: 147px;
+    background-color: #2a2929;
+    border: none;
+    text-transform: uppercase;
+    font-size: 15px;
+    letter-spacing: 0.1em;
+    margin-top: 22px;
+    vertical-align: top;
+    height: 50px;
+    border-radius: 12px;
+}
+
+.buttons button:hover {
+    cursor: pointer;
+}
+
+#overlay {
+    width: 80%;
+    margin: 2% auto;
+    height: 95vh;
+    background-color: rgba(255, 255, 255, 0.959);
+    border-radius: 30px;
+    vertical-align: middle;
+    overflow: auto;
+}
+
+.disabled {
+    display: none;
+}
+
+.logo {
+    margin-left: 265px;
+    height: 80px;
+    text-align: center;
+}
+
+#spotify {
+    width: 250px;
+    height: 80px;
+    float: right;
+    margin-right: 15px;
+    margin-top: 5px;
+}
+
+.playingcards img {
+    max-height: 165px;
+}
