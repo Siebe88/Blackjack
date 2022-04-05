@@ -170,7 +170,7 @@ function gameOver(winner) {
     $("#stand-button").attr("class", "disabled");
     $("#deal-button").attr("class", "enabled");
     $("#gamesHouse").text("The house has won: " + gamesHouse);
-    $("#gamesPlayer").text("The house has won: " + gamesPlayer);
+    $("#gamesPlayer").text("The player has won: " + gamesPlayer);
 }
 
 function getRdmNumb(min, max) {
