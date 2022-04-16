@@ -1,37 +1,33 @@
-let gamesPlayer = 0;
-let gamesHouse = 0;
+let cards = {
+  ScorePlayer: 0,
+  ScoreHouse: 0,
+  playerCards: [],
+  houseCards: [],
+  // These codes are used to get the correct images for cards
+  courts: ['0', 'J', 'Q', 'K', 'A'],
+  suits: ['H', 'C', 'D', 'S'],
+  cardImgSource: "https://deckofcardsapi.com/static/img/",
 
-let ScorePlayer = 0;
-let ScoreHouse = 0;
+  // Functions
+  removeCards: function(who){
+        // soure: https://www.geeksforgeeks.org/remove-all-the-child-elements-of-a-dom-node-in-javascript/#:~:text=Child%20nodes%20can%20be%20removed,which%20produces%20the%20same%20output.
+        var removeCards = document.getElementById(who)
+        var child = removeCards.lastElementChild;
+        while (child) {
+            removeCards.removeChild(child);
+            child = removeCards.lastElementChild;
+        }
+  },
 
-let playerCards = [];
-let houseCards = [];
+  dealCards: function () {
+    cards.playerCards = [];
+    cards.houseCards = [];
 
-// These codes are used to get the correct images for cards
-const courts = ['0', 'J', 'Q', 'K', 'A'];
-const suits = ['H', 'C', 'D', 'S'];
-const cardImgSource = "https://deckofcardsapi.com/static/img/"
-
-
-function removeCards(who) {
-    // soure: https://www.geeksforgeeks.org/remove-all-the-child-elements-of-a-dom-node-in-javascript/#:~:text=Child%20nodes%20can%20be%20removed,which%20produces%20the%20same%20output.
-    var removeCards = document.getElementById(who)
-    var child = removeCards.lastElementChild;
-    while (child) {
-        removeCards.removeChild(child);
-        child = removeCards.lastElementChild;
-    }
-}
-
-function dealCards() {
-    playerCards = [];
-    houseCards = [];
-
-    ScoreHouse = 0;
+    cards.ScoreHouse = 0;
     document.getElementById("ScoreHouse").innerHTML = 'The house: ';
 
-    removeCards("playerCards");
-    removeCards("houseCards");
+    cards.removeCards("playerCards");
+    cards.removeCards("houseCards");
 
     document.getElementById("deal-button").className = "disabled"
     document.getElementById("hit-button").className = "enabled"
@@ -43,48 +39,51 @@ function dealCards() {
     getCard('playerCards');
 }
 
-function getCardPlayer() {
-    getCard('playerCards');
 }
 
+let games = {
+  gamesPlayer : 0,
+  gamesHouse : 0,
+
+}
+
+
+
 function getCard(who) {
-    let suit = suits[getRdmNumb(0, 3)];
+    let suit = cards.suits[getRdmNumb(0, 3)];
     let cardValue = getRdmNumb(2, 14);
     let card = suit + cardValue;
 
     // Somehow de ace of diamonds is not working
     // And ofcours we can't have double cards
-    while (playerCards.includes(card) == true || houseCards.includes(card) || card == 'D14') {
-        suit = suits[getRdmNumb(0, 3)];
+    while (cards.playerCards.includes(card) == true || cards.houseCards.includes(card) || card == 'D14') {
+        suit = cards.suits[getRdmNumb(0, 3)];
         cardValue = getRdmNumb(2, 14);
         card = suit + cardValue;
     }
 
     if (who == 'playerCards') {
-        playerCards.push(card);
+        cards.playerCards.push(card);
     } else {
-        houseCards.push(card)
+        cards.houseCards.push(card)
     }
 
     let cardImg = "img/closedCard1.png";
 
-    if (houseCards.length != 1) {
+    if (cards.houseCards.length != 1) {
         cardImg = getCardImage(card);
     }
 
     $("<img>")
         .attr("src", cardImg)
         .appendTo("#" + who)
-        // .hide()
-        // .slideDown(1000);
-
 }
 
 function getScoresPlayer() {
-    ScorePlayer = 0;
+    cards.ScorePlayer = 0;
     let ScoresPlayer = [0];
-    for (let i = 0; i < playerCards.length; i++) {
-        let cardValue = parseInt(playerCards[i].substr(1));
+    for (let i = 0; i < cards.playerCards.length; i++) {
+        let cardValue = parseInt(cards.playerCards[i].substr(1));
 
         let j = 0;
         while (j < ScoresPlayer.length) {
@@ -103,26 +102,26 @@ function getScoresPlayer() {
 
     //filter out all scores above 21 (results in busted) and get max value from the filtered array
     ScoresPlayer = ScoresPlayer.filter(function(value, index, arr) { return value < 22; });
-    ScorePlayer = Math.max(...ScoresPlayer);
+    cards.ScorePlayer = Math.max(...ScoresPlayer);
 
-    if (ScoresPlayer.length == 0 && playerCards.length != 0) {
-        ScorePlayer = "busted";
-        gamesHouse++;
+    if (ScoresPlayer.length == 0 && cards.playerCards.length != 0) {
+        cards.ScorePlayer = "busted";
+        games.gamesHouse++;
         gameOver("The house");
 
-    } else if (ScorePlayer == 21) {
-        ScorePlayer = "21 (automatic winner!!!)";
-        gamesPlayer++;
+    } else if (cards.ScorePlayer == 21) {
+        cards.ScorePlayer = "21 (automatic winner!!!)";
+        games.gamesPlayer++;
         gameOver("The Player");
     }
-    document.getElementById("ScorePlayer").innerHTML = `The player: ${ScorePlayer}`;
+    document.getElementById("ScorePlayer").innerHTML = `The player: ${cards.ScorePlayer}`;
 }
 
 function getScoresHouse() {
-    ScoreHouse = 0;
+    cards.ScoreHouse = 0;
     let ScoresHouse = [0];
-    for (let i = 0; i < houseCards.length; i++) {
-        let cardValue = parseInt(houseCards[i].substr(1));
+    for (let i = 0; i < cards.houseCards.length; i++) {
+        let cardValue = parseInt(cards.houseCards[i].substr(1));
 
         let j = 0;
         while (j < ScoresHouse.length) {
@@ -141,22 +140,22 @@ function getScoresHouse() {
 
     //filter out all scores above 21 (results in busted) and get max value from the filtered array
     ScoresHouse = ScoresHouse.filter(function(value, index, arr) { return value < 22; });
-    ScoreHouse = Math.max(...ScoresHouse);
+    cards.ScoreHouse = Math.max(...ScoresHouse);
 
-    document.getElementById("ScoreHouse").innerHTML = `The house: ${ScoreHouse}`;
+    document.getElementById("ScoreHouse").innerHTML = `The house: ${cards.ScoreHouse}`;
 
-    if (ScoreHouse > ScorePlayer) {
-        gamesHouse++;
+    if (cards.ScoreHouse > cards.ScorePlayer) {
+        games.gamesHouse++;
         gameOver("The house");
-    } else if (ScoreHouse == ScorePlayer) {
+    } else if (cards.ScoreHouse == cards.ScorePlayer) {
         gameOver("Nobody (scores are equal)");
-    } else if (ScoresHouse.length == 0 && houseCards.length != 0) {
+    } else if (ScoresHouse.length == 0 && cards.houseCards.length != 0) {
         ScoreHouse = "busted";
-        document.getElementById("ScoreHouse").innerHTML = `The house: ${ScoreHouse}`;
-        gamesPlayer++;
+        document.getElementById("ScoreHouse").innerHTML = `The house: ${cards.ScoreHouse}`;
+        games.gamesPlayer++;
         gameOver("The Player");
 
-    } else if (ScoreHouse < ScorePlayer) {
+    } else if (cards.ScoreHouse < cards.ScorePlayer) {
         getCard('houseCards');
         getScoresHouse();
     }
@@ -169,8 +168,8 @@ function gameOver(winner) {
     $("#hit-button").attr("class", "disabled");
     $("#stand-button").attr("class", "disabled");
     $("#deal-button").attr("class", "enabled");
-    $("#gamesHouse").text("The house has won: " + gamesHouse);
-    $("#gamesPlayer").text("The player has won: " + gamesPlayer);
+    $("#gamesHouse").text("The house has won: " + games.gamesHouse);
+    $("#gamesPlayer").text("The player has won: " + games.gamesPlayer);
 }
 
 function getRdmNumb(min, max) {
@@ -178,11 +177,11 @@ function getRdmNumb(min, max) {
 }
 
 function stand() {
-    removeCards("houseCards");
+    cards.removeCards("houseCards");
 
-    for (let i = 0; i < houseCards.length; i++) {
+    for (let i = 0; i < cards.houseCards.length; i++) {
         var img = new Image();
-        img.src = getCardImage(houseCards[i]);
+        img.src = getCardImage(cards.houseCards[i]);
         document.getElementById("houseCards").appendChild(img);
     }
     getScoresHouse()
@@ -191,10 +190,10 @@ function stand() {
 function getCardImage(card) {
     let cardValue = parseInt(card.substring(1));
     let suit = card[0];
-    let cardImg = cardImgSource;
+    let cardImg = cards.cardImgSource;
 
     if (cardValue > 9) {
-        cardImg = cardImg + courts[cardValue - 10] + suit;
+        cardImg = cardImg + cards.courts[cardValue - 10] + suit;
     } else {
         cardImg = cardImg + cardValue + suit;
     }
