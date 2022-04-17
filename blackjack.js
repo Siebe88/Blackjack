@@ -85,36 +85,14 @@ function getCard(who) {
     .appendTo("#" + who)
 }
 
-function getScoresPlayer() {
-  cards.ScorePlayer = 0;
-  let ScoresPlayer = [0];
-  for (let i = 0; i < cards.playerCards.length; i++) {
-    let cardValue = parseInt(cards.playerCards[i].substr(1));
+function getScoresPlayer(){
+  cards.ScorePlayer = getScores('Player');
+  cards.ScoreHouse = getScores('House');
 
-    let j = 0;
-    while (j < ScoresPlayer.length) {
-      if (cardValue == 14) {
-        ScoresPlayer.push(ScoresPlayer[j] + 1);
-        ScoresPlayer[j] += 11;
-        j++;
-      } else if (cardValue > 10) {
-        ScoresPlayer[j] += 10;
-      } else {
-        ScoresPlayer[j] += cardValue
-      }
-      j++;
-    }
-  }
-
-  //filter out all scores above 21 (results in busted) and get max value from the filtered array
-  ScoresPlayer = ScoresPlayer.filter(function (value, index, arr) { return value < 22; });
-  cards.ScorePlayer = Math.max(...ScoresPlayer);
-
-  if (ScoresPlayer.length == 0 && cards.playerCards.length != 0) {
+  if (cards.ScorePlayer  == -1 && cards.playerCards.length != 0) {
     cards.ScorePlayer = "busted";
     games.gamesHouse++;
     games.gameOver("The house");
-
   } else if (cards.ScorePlayer == 21) {
     cards.ScorePlayer = "21 (automatic winner!!!)";
     games.gamesPlayer++;
@@ -123,30 +101,35 @@ function getScoresPlayer() {
   document.getElementById("ScorePlayer").innerHTML = `The player: ${cards.ScorePlayer}`;
 }
 
-function getScoresHouse() {
-  cards.ScoreHouse = 0;
-  let ScoresHouse = [0];
-  for (let i = 0; i < cards.houseCards.length; i++) {
-    let cardValue = parseInt(cards.houseCards[i].substr(1));
+
+function getScores(who) {
+  cards['Score' + who] = 0;
+  let scores = [0];
+  for (let i = 0; i < cards[who.toLowerCase() + 'Cards'].length; i++) {
+    let cardValue = parseInt(cards[who.toLowerCase() + 'Cards'][i].substr(1));
 
     let j = 0;
-    while (j < ScoresHouse.length) {
+    while (j < scores.length) {
       if (cardValue == 14) {
-        ScoresHouse.push(ScoresHouse[j] + 1);
-        ScoresHouse[j] += 11;
+        scores.push(scores[j] + 1);
+        scores[j] += 11;
         j++;
       } else if (cardValue > 10) {
-        ScoresHouse[j] += 10;
+        scores[j] += 10;
       } else {
-        ScoresHouse[j] += cardValue
+        scores[j] += cardValue
       }
       j++;
     }
   }
 
   //filter out all scores above 21 (results in busted) and get max value from the filtered array
-  ScoresHouse = ScoresHouse.filter(function (value, index, arr) { return value < 22; });
-  cards.ScoreHouse = Math.max(...ScoresHouse);
+  scores = scores.filter(function (value) { return value < 22; });
+  return Math.max(-1,...scores);
+}
+
+function getScoresHouse() {
+  cards.ScoreHouse = getScores('House')
 
   document.getElementById("ScoreHouse").innerHTML = `The house: ${cards.ScoreHouse}`;
 
@@ -155,7 +138,7 @@ function getScoresHouse() {
     games.gameOver("The house");
   } else if (cards.ScoreHouse == cards.ScorePlayer) {
     games.gameOver("Nobody (scores are equal)");
-  } else if (ScoresHouse.length == 0 && cards.houseCards.length != 0) {
+  } else if (cards.ScoreHouse == -1 && cards.houseCards.length != 0) {
     cards.ScoreHouse = "busted";
     document.getElementById("ScoreHouse").innerHTML = `The house: ${cards.ScoreHouse}`;
     games.gamesPlayer++;
