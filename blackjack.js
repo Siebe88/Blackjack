@@ -33,12 +33,10 @@ let cards = {
     document.getElementById("hit-button").className = "enabled"
     document.getElementById("stand-button").className = "enabled"
 
-    getCard('houseCards');
-    getCard('houseCards');
-    getCard('playerCards');
-    getCard('playerCards');
+    for (let card of ['houseCards', 'houseCards', 'playerCards', 'playerCards']){
+      getCard(card);
+    }
   }
-
 }
 
 let games = {
@@ -57,7 +55,6 @@ let games = {
     $("#gamesPlayer").text("The player has won: " + games.gamesPlayer);
   }
 }
-
 
 
 function getCard(who) {
